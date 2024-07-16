@@ -53,22 +53,29 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $credentials = $request->only('email', 'password');
+        $credentials = request(['email', 'password']);
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            $token = $user->createToken('LaravelPassport')->accessToken;
-
-            return response()->json(['token' => $token], 200);
-        } else {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        if (!Auth::attempt($credentials)) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
         }
+
+        $user = $request->user();
+        $tokenResult = $user->createToken('Personal Access Token');
+        $token = $tokenResult->token;
+
+        $minutes = 30 * 24 * 60;
+
+        $token->save();
+
+        return response()->json(['message' => __('authorization successful')], 200)
+                ->cookie('access_token', $tokenResult->accessToken, $minutes, env('COOKIE_PATH'), env('COOKIE_DOMAIN'), env('COOKIE_SECURE'), false, false, env('COOKIE_SAMESITE'));
     }
 
     public function logout(Request $request)
     {
 
-        Log::info('Logout request received.');
         Auth::user()->token()->revoke();
 
         return response()->json(['message' => 'Successfully logged out'], 200);
