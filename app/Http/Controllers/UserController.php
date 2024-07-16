@@ -37,6 +37,17 @@ class UserController extends Controller
             'email' => 'sometimes|required|string|email|max:255|unique:users',
         ]);
 
+        if(Auth::user()->can('update', $user)){
+            if($request->name) {
+                $user->name = $request->name;
+            }
+            if($request->email) {
+                $user->email = $request->email;
+            }
+            $user->save();
+        } else {
+            return response()->json(['message' => 'Permission denied'], 401);
+        }
         $user->name = $request->name;
         $user->email = $request->email;
         $user->save();
