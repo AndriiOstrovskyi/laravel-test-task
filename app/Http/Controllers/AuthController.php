@@ -6,17 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-        ]);
-
         $user = new User([
             'name' => $request->name,
             'email' => $request->email,
@@ -29,7 +25,7 @@ class AuthController extends Controller
 
         if (!Auth::attempt($credentials)) {
             return response()->json([
-                'message' => 'Unauthorized'
+                'message' => __('Unauthorized')
             ], 401);
         }
 
@@ -45,18 +41,13 @@ class AuthController extends Controller
                 ->cookie('access_token', $tokenResult->accessToken, $minutes, env('COOKIE_PATH'), env('COOKIE_DOMAIN'), env('COOKIE_SECURE'), false, false, env('COOKIE_SAMESITE')); 
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
-
         $credentials = request(['email', 'password']);
 
         if (!Auth::attempt($credentials)) {
             return response()->json([
-                'message' => 'Unauthorized'
+                'message' => __('Unauthorized')
             ], 401);
         }
 
@@ -77,6 +68,6 @@ class AuthController extends Controller
 
         Auth::user()->token()->revoke();
 
-        return response()->json(['message' => 'Successfully logged out'], 200);
+        return response()->json(['message' => __('Successfully logged out')], 200);
     }
 }
