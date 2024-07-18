@@ -32,12 +32,7 @@ class UserController extends Controller
     public function update(UserRequest $request, User $user)
     {
         if(Auth::user()->can('update', $user) && $user->role !== 'admin') {
-            if($request->name) {
-                $user->name = $request->name;
-            }
-            if($request->email) {
-                $user->email = $request->email;
-            }
+            $user->fill($request->validated());
             $user->save();
         } else {
             return response()->json(['message' => __('Permission denied')], 401);

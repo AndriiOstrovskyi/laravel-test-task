@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\WeatherResultRequest;
+use App\Http\Requests\SaveCurrentWeatherRequest;
 use App\Models\WeatherResult;
 use App\Jobs\ProcessWeatherData;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class WeatherResultController extends Controller
 {
@@ -26,24 +28,7 @@ class WeatherResultController extends Controller
     public function update(WeatherResultRequest $request, WeatherResult $weatherResult)
     {
         if(Auth::user()->can('update', $weatherResult)) {
-            if($request->city) {
-                $weatherResult->city = $request->city;
-            }
-            if($request->region) {
-                $weatherResult->region = $request->region;
-            }
-            if($request->country) {
-                $weatherResult->country = $request->country;
-            }
-            if($request->localtime) {
-                $weatherResult->localtime = $request->localtime;
-            }
-            if($request->condition_text) {
-                $weatherResult->condition_text = $request->condition_text;
-            }
-            if($request->condition_icon) {
-                $weatherResult->condition_icon = $request->condition_icon;
-            }
+            $weatherResult->fill($request->validated());
             $weatherResult->save();
         } else {
             return response()->json(['message' => __('Permission denied')], 401);
@@ -63,10 +48,11 @@ class WeatherResultController extends Controller
         }
     }
     
-    public function saveCurrentWeather(Request $request)
+    public function saveCurrentWeather(SaveCurrentWeatherRequest $request)
     {
         $city = $request->city;
-        $lang = $request->lang;
+        $lang = $request->has('lang') ? $request->lang : 'en';
+
         $cacheKey = "weather_{$city}_{$lang}";
 
         if (Cache::has($cacheKey)) {
@@ -74,7 +60,7 @@ class WeatherResultController extends Controller
             return response()->json(['data' => $data, 'source' => 'cache'], 200);
         }
 
-        $url = env('WEATHER_API_URL') . 'current.json?key=' . env('WEATHER_API_KEY') . '&q=' . $city . '&lang=' . $lang;
+        $url = $this->buildApiUrl($city, $lang);
         $response = Http::get($url);
 
         if ($response->successful()) {
@@ -90,12 +76,29 @@ class WeatherResultController extends Controller
             $condition_icon = $current['condition']['icon'];
 
             Cache::put($cacheKey, $data, now()->addMinutes(10));
-
-            ProcessWeatherData::dispatch($city, $region, $country, $localtime, $condition_text, $condition_icon);
+            $this->dispatchWeatherDataJob($data);
 
             return response()->json(['data' => $data, 'source' => 'api'], 200);
         } else {
+            Log::error('Failed to fetch weather data', ['status' => $response->status(), 'body' => $response->body()]);
             return response()->json(['message' => __('Failed to fetch weather data')], $response->status());
         }
+    }
+
+    private function buildApiUrl($city, $lang)
+    {
+        return env('WEATHER_API_URL') . 'current.json?key=' . env('WEATHER_API_KEY') . '&q=' . $city . '&lang=' . $lang;
+    }
+
+    private function dispatchWeatherDataJob($data)
+    {
+        ProcessWeatherData::dispatch(
+            $data['location']['name'],
+            $data['location']['region'],
+            $data['location']['country'],
+            $data['location']['localtime'],
+            $data['current']['condition']['text'],
+            $data['current']['condition']['icon']
+        );
     }
 }
