@@ -17,34 +17,32 @@ class WeatherResultController extends Controller
     public function index()
     {
         $weatherResults = WeatherResult::all();
-        return response()->json(['weatherResults' => $weatherResults], 200);
+        return $this->successResponse(['weatherResults' => $weatherResults]);
     }
 
     public function show(WeatherResult $weatherResult)
     {
-        return response()->json(['weatherResult' => $weatherResult], 200);
+        return $this->successResponse(['weatherResult' => $weatherResult]);
     }
 
     public function update(WeatherResultRequest $request, WeatherResult $weatherResult)
     {
-        if(Auth::user()->can('update', $weatherResult)) {
+        if (Auth::user()->can('update', $weatherResult)) {
             $weatherResult->fill($request->validated());
             $weatherResult->save();
+            return $this->successResponse(['weatherResult' => $weatherResult]);
         } else {
-            return response()->json(['message' => __('Permission denied')], 401);
+            return $this->errorResponse(__('Permission denied'), 401);
         }
-
-        return response()->json(['weatherResult' => $weatherResult], 200);
     }
 
     public function destroy(WeatherResult $weatherResult)
     {
-        if(Auth::user()->can('delete', $weatherResult)) {
+        if (Auth::user()->can('delete', $weatherResult)) {
             $weatherResult->delete();
-
-            return response()->json(['message' => __('Weather result deleted successfully')], 200);
+            return $this->successResponse(['message' => __('Weather result deleted successfully')]);
         } else {
-            return response()->json(['message' => __('Permission denied')], 401);
+            return $this->errorResponse(__('Permission denied'), 401);
         }
     }
     
@@ -57,7 +55,7 @@ class WeatherResultController extends Controller
 
         if (Cache::has($cacheKey)) {
             $data = Cache::get($cacheKey);
-            return response()->json(['data' => $data, 'source' => 'cache'], 200);
+            return $this->successResponse(['data' => $weatherData, 'source' => 'cache']);
         }
 
         $url = $this->buildApiUrl($city, $lang);
@@ -78,10 +76,11 @@ class WeatherResultController extends Controller
             Cache::put($cacheKey, $data, now()->addMinutes(10));
             $this->dispatchWeatherDataJob($data);
 
-            return response()->json(['data' => $data, 'source' => 'api'], 200);
+            return $this->successResponse(['data' => $weatherData, 'source' => 'api']);
         } else {
             Log::error('Failed to fetch weather data', ['status' => $response->status(), 'body' => $response->body()]);
-            return response()->json(['message' => __('Failed to fetch weather data')], $response->status());
+            return $this->errorResponse(__('Failed to fetch weather data'), $response->status());
+
         }
     }
 

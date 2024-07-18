@@ -14,9 +14,9 @@ class UserController extends Controller
     {   
         if(Auth::user()->can('viewAny', User::class)){
             $users = User::all();
-            return response()->json(['users' => $users], 200);
+            return $this->successResponse(['users' => $users]);
         } else {
-            return response()->json(['message' => __('Permission denied')], 401);
+            return $this->errorResponse(__('Permission denied'), 401);
         }
     }
 
@@ -24,8 +24,9 @@ class UserController extends Controller
     {
         if(Auth::user()->can('view', $user)){
             return response()->json(['user' => $user], 200);
+            return $this->successResponse(['user' => $user]);
         } else {
-            return response()->json(['message' => __('Permission denied')], 401);
+            return $this->errorResponse(__('Permission denied'), 401);
         }
     }
 
@@ -34,21 +35,19 @@ class UserController extends Controller
         if(Auth::user()->can('update', $user) && $user->role !== 'admin') {
             $user->fill($request->validated());
             $user->save();
+            return $this->successResponse(['user' => $user]);
         } else {
-            return response()->json(['message' => __('Permission denied')], 401);
+            return $this->errorResponse(__('Permission denied'), 401);
         }
-
-        return response()->json(['user' => $user], 200);
     }
 
     public function destroy(User $user)
     {
         if(Auth::user()->can('delete', $user) && $user->role !== 'admin') {
             $user->delete();
+            return $this->successResponse(['message' => __('User deleted')]);
         } else {
-            return response()->json(['message' => __('Permission denied')], 401);
+            return $this->errorResponse(__('Permission denied'), 401);
         }
-        
-        return response()->json(['message' => __('User deleted')], 200);
     }
 }

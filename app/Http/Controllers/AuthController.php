@@ -22,33 +22,28 @@ class AuthController extends Controller
         $user->save();
 
         $credentials = request(['email', 'password']);
-
-        if (!Auth::attempt($credentials)) {
-            return response()->json([
-                'message' => __('Unauthorized')
-            ], 401);
-        }
-
-        $user = $request->user();
-        $tokenResult = $user->createToken('Personal Access Token');
-        $token = $tokenResult->token;
-
-        $minutes = 30 * 24 * 60;
-
-        $token->save();
-
-        return response()->json(['message' => __('authorization successful')], 200)
-                ->cookie('access_token', $tokenResult->accessToken, $minutes, env('COOKIE_PATH'), env('COOKIE_DOMAIN'), env('COOKIE_SECURE'), false, false, env('COOKIE_SAMESITE')); 
+        
+        return $this->authenticateAndRespond($request, $credentials); 
     }
 
     public function login(LoginRequest $request)
     {
         $credentials = request(['email', 'password']);
 
+        return $this->authenticateAndRespond($request, $credentials);
+        }
+
+    public function logout(Request $request)
+    {
+        Auth::user()->token()->revoke();
+
+        return $this->successResponse(['message' => __('Successfully logged out')]);
+    }
+
+    private function authenticateAndRespond(Request $request, array $credentials)
+    {
         if (!Auth::attempt($credentials)) {
-            return response()->json([
-                'message' => __('Unauthorized')
-            ], 401);
+            return $this->errorResponse(__('Unauthorized'), 401);
         }
 
         $user = $request->user();
@@ -59,15 +54,7 @@ class AuthController extends Controller
 
         $token->save();
 
-        return response()->json(['message' => __('authorization successful')], 200)
+        return $this->successResponse(['message' => __('Authorization successful')])
                 ->cookie('access_token', $tokenResult->accessToken, $minutes, env('COOKIE_PATH'), env('COOKIE_DOMAIN'), env('COOKIE_SECURE'), false, false, env('COOKIE_SAMESITE'));
-    }
-
-    public function logout(Request $request)
-    {
-
-        Auth::user()->token()->revoke();
-
-        return response()->json(['message' => __('Successfully logged out')], 200);
     }
 }
