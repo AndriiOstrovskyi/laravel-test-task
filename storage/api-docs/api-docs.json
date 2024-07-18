@@ -1,0 +1,1236 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Swagger API",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/": {},
+        "/api/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register",
+                "description": "Register a new user",
+                "operationId": "register",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "authorization successful"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The email has already been taken."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login",
+                "description": "Login a user",
+                "operationId": "login",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "authorization successful"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The email field is required."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout",
+                "description": "Logout a user",
+                "operationId": "logout",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Successfully logged out"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unauthenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/users": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get list of users",
+                "description": "Get list of users",
+                "operationId": "users",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "users": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/User"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unauthenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Permission denied.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Permission denied."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/users/{id}": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get user",
+                "description": "Get user",
+                "operationId": "Get user",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of user",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unauthenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Permission denied.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Permission denied."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No query results for model [App\\\\Models\\\\User] 200"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Update user",
+                "description": "Update user",
+                "operationId": "Update user",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of user",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unauthenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Permission denied.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Permission denied."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No query results for model [App\\\\Models\\\\User] 200"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Delete user",
+                "description": "Delete user",
+                "operationId": "Delete user",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of user",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User deleted"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unauthenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Permission denied.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Permission denied."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No query results for model [App\\\\Models\\\\User] 200"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/weather/weatherHistory": {
+            "get": {
+                "tags": [
+                    "WeatherResult"
+                ],
+                "summary": "Get list of weather results",
+                "description": "Get list of weather results",
+                "operationId": "weatherHistory",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "weatherResults": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/WeatherResult"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unauthenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/weather/weatherHistory/{id}": {
+            "get": {
+                "tags": [
+                    "WeatherResult"
+                ],
+                "summary": "Get weather result",
+                "description": "Get weather result",
+                "operationId": "Get weather result",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of weather result",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "weatherResult": {
+                                            "$ref": "#/components/schemas/WeatherResult"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unauthenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No query results for model [App\\\\Models\\WeatherResult] 100"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/weather/weatherHistory/{id}": {
+            "post": {
+                "tags": [
+                    "WeatherResult"
+                ],
+                "summary": "Create weather result",
+                "description": "Create weather result",
+                "operationId": "Create weather result",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of weather result",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/WeatherResultUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "weatherResult": {
+                                            "$ref": "#/components/schemas/WeatherResult"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unauthenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Permission denied.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Permission denied."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "WeatherResult"
+                ],
+                "summary": "Delete weather result",
+                "description": "Delete weather result",
+                "operationId": "Delete weather result",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of weather result",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Weather result deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unauthenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Permission denied.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Permission denied."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/weather/saveCurrentWeather": {
+            "post": {
+                "tags": [
+                    "WeatherResult"
+                ],
+                "summary": "Save current weather",
+                "description": "Save current weather",
+                "operationId": "Save current weather",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "city": {
+                                        "type": "string",
+                                        "example": "London"
+                                    },
+                                    "lang": {
+                                        "type": "string",
+                                        "example": "en"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CurrentWeather"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unauthenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Failed to fetch weather data"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "User": {
+                "properties": {
+                    "id": {
+                        "description": "User ID",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "description": "User name",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "User email",
+                        "type": "string"
+                    },
+                    "email_verified_at": {
+                        "description": "User email verified at",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_at": {
+                        "description": "User created at",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "User updated at",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "role": {
+                        "description": "User role",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "UserUpdate": {
+                "properties": {
+                    "name": {
+                        "description": "User name",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "User email",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "WeatherResult": {
+                "properties": {
+                    "id": {
+                        "description": "Weather result ID",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "city": {
+                        "description": "Weather result city",
+                        "type": "string"
+                    },
+                    "region": {
+                        "description": "Weather result region",
+                        "type": "string"
+                    },
+                    "country": {
+                        "description": "Weather result country",
+                        "type": "string"
+                    },
+                    "localtime": {
+                        "description": "Weather result localtime",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "condition_text": {
+                        "description": "Weather result condition text",
+                        "type": "string"
+                    },
+                    "condition_icon": {
+                        "description": "Weather result condition icon",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "Weather result created at",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Weather result updated at",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "WeatherResultUpdate": {
+                "properties": {
+                    "city": {
+                        "description": "Weather result city",
+                        "type": "string"
+                    },
+                    "region": {
+                        "description": "Weather result region",
+                        "type": "string"
+                    },
+                    "country": {
+                        "description": "Weather result country",
+                        "type": "string"
+                    },
+                    "localtime": {
+                        "description": "Weather result localtime",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "condition_text": {
+                        "description": "Weather result condition text",
+                        "type": "string"
+                    },
+                    "condition_icon": {
+                        "description": "Weather result condition icon",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Location": {
+                "properties": {
+                    "name": {
+                        "description": "City name",
+                        "type": "string"
+                    },
+                    "region": {
+                        "description": "Region",
+                        "type": "string"
+                    },
+                    "country": {
+                        "description": "Country",
+                        "type": "string"
+                    },
+                    "lat": {
+                        "description": "Latitude",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "lon": {
+                        "description": "Longitude",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "tz_id": {
+                        "description": "Time zone ID",
+                        "type": "string"
+                    },
+                    "localtime_epoch": {
+                        "description": "Local time epoch",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "localtime": {
+                        "description": "Local time",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Condition": {
+                "properties": {
+                    "text": {
+                        "description": "Condition text",
+                        "type": "string"
+                    },
+                    "icon": {
+                        "description": "Condition icon URL",
+                        "type": "string"
+                    },
+                    "code": {
+                        "description": "Condition code",
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                },
+                "type": "object"
+            },
+            "Current": {
+                "properties": {
+                    "last_updated_epoch": {
+                        "description": "Last updated epoch",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "last_updated": {
+                        "description": "Last updated time",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "temp_c": {
+                        "description": "Temperature in Celsius",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "temp_f": {
+                        "description": "Temperature in Fahrenheit",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "is_day": {
+                        "description": "Is day",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "condition": {
+                        "$ref": "#/components/schemas/Condition"
+                    },
+                    "wind_mph": {
+                        "description": "Wind speed in MPH",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "wind_kph": {
+                        "description": "Wind speed in KPH",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "wind_degree": {
+                        "description": "Wind degree",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "wind_dir": {
+                        "description": "Wind direction",
+                        "type": "string"
+                    },
+                    "pressure_mb": {
+                        "description": "Pressure in MB",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "pressure_in": {
+                        "description": "Pressure in IN",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "precip_mm": {
+                        "description": "Precipitation in MM",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "precip_in": {
+                        "description": "Precipitation in IN",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "humidity": {
+                        "description": "Humidity",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "cloud": {
+                        "description": "Cloud",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "feelslike_c": {
+                        "description": "Feels like temperature in Celsius",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "feelslike_f": {
+                        "description": "Feels like temperature in Fahrenheit",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "windchill_c": {
+                        "description": "Wind chill temperature in Celsius",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "windchill_f": {
+                        "description": "Wind chill temperature in Fahrenheit",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "heatindex_c": {
+                        "description": "Heat index temperature in Celsius",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "heatindex_f": {
+                        "description": "Heat index temperature in Fahrenheit",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "dewpoint_c": {
+                        "description": "Dew point temperature in Celsius",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "dewpoint_f": {
+                        "description": "Dew point temperature in Fahrenheit",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "vis_km": {
+                        "description": "Visibility in KM",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "vis_miles": {
+                        "description": "Visibility in Miles",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "uv": {
+                        "description": "UV Index",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "gust_mph": {
+                        "description": "Wind gust in MPH",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "gust_kph": {
+                        "description": "Wind gust in KPH",
+                        "type": "number",
+                        "format": "float"
+                    }
+                },
+                "type": "object"
+            },
+            "CurrentWeather": {
+                "properties": {
+                    "data": {
+                        "properties": {
+                            "location": {
+                                "$ref": "#/components/schemas/Location"
+                            },
+                            "current": {
+                                "$ref": "#/components/schemas/Current"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "source": {
+                        "description": "Source of the data",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "API for authentication"
+        },
+        {
+            "name": "User",
+            "description": "API for users"
+        },
+        {
+            "name": "WeatherResult",
+            "description": "API for weather results"
+        }
+    ]
+}
