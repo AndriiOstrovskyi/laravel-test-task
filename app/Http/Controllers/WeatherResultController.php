@@ -54,7 +54,7 @@ class WeatherResultController extends Controller
         $cacheKey = "weather_{$city}_{$lang}";
 
         if (Cache::has($cacheKey)) {
-            $data = Cache::get($cacheKey);
+            $weatherData = Cache::get($cacheKey);
             return $this->successResponse(['data' => $weatherData, 'source' => 'cache']);
         }
 
@@ -62,19 +62,10 @@ class WeatherResultController extends Controller
         $response = Http::get($url);
 
         if ($response->successful()) {
-            $data = $response->json();
-
-            $location = $data['location'];
-            $current = $data['current'];
-            $city = $location['name'];
-            $region = $location['region'];
-            $country = $location['country'];
-            $localtime = $location['localtime'];
-            $condition_text = $current['condition']['text'];
-            $condition_icon = $current['condition']['icon'];
-
-            Cache::put($cacheKey, $data, now()->addMinutes(10));
-            $this->dispatchWeatherDataJob($data);
+            $weatherData = $response->json();
+            
+            Cache::put($cacheKey, $weatherData, now()->addMinutes(10));
+            $this->dispatchWeatherDataJob($weatherData);
 
             return $this->successResponse(['data' => $weatherData, 'source' => 'api']);
         } else {
