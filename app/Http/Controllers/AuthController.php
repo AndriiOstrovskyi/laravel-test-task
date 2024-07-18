@@ -31,7 +31,7 @@ class AuthController extends Controller
         $credentials = request(['email', 'password']);
 
         return $this->authenticateAndRespond($request, $credentials);
-        }
+    }
 
     public function logout(Request $request)
     {
